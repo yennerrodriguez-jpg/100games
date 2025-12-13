@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlueAndPlay 100 Games Runner</title>
+    <title>BlueAndPlay 100 Clicks Challenge</title>
     <style>
         body {
             display: flex;
@@ -11,297 +11,151 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-            font-family: sans-serif;
-        }
-
-        #gameContainer {
-            border: 3px solid #0044cc;
-            background-color: #e0f7fa; /* Light blue background */
-            position: relative;
-            overflow: hidden;
-            width: 600px;
-            height: 300px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        #player {
-            width: 20px;
-            height: 20px;
-            background-color: #0044cc; /* Blue player */
-            position: absolute;
-            bottom: 10px;
-            left: 50px;
-            transition: bottom 0.2s; /* Smooth jump animation */
-        }
-
-        .triangle {
-            position: absolute;
-            bottom: 10px;
-            width: 0;
-            height: 0;
-            /* Create a solid triangle using CSS borders */
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 30px solid #cc0000; /* Red Triangle Obstacle */
-            transform: translateX(0);
-            transition: none; /* Handled by JS for smooth movement */
-        }
-
-        #scoreBoard {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5em;
-            color: #333;
-            font-weight: bold;
-        }
-
-        #winScreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background-color: #e0f7fa; /* Light blue background to match blueandplay theme */
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            z-index: 10;
         }
 
-        #winScreen h1 {
+        #gameArea {
+            padding: 30px;
+            border: 5px solid #0044cc; /* Blue border */
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 400px;
+        }
+
+        h1 {
             color: #0044cc;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        #clickCount {
             font-size: 3em;
+            color: #cc0000; /* Red for emphasis */
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        #winScreen button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            margin-top: 20px;
-            cursor: pointer;
-            background-color: #4CAF50;
+        #clickButton {
+            padding: 20px 40px;
+            font-size: 1.5em;
             color: white;
+            background-color: #4CAF50; /* Green button */
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.1s, transform 0.1s;
+            outline: none;
         }
 
-        #winScreen button:hover {
+        #clickButton:hover {
             background-color: #45a049;
         }
+        
+        #clickButton:active {
+            transform: scale(0.98);
+        }
 
-        .ground-line {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background-color: #333;
-            z-index: 5;
+        #winButton {
+            display: none; /* Hidden until 100 clicks */
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #0044cc; /* Blue button */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s;
+            text-decoration: none; /* For the link appearance */
+        }
+
+        #winButton:hover {
+            background-color: #003399;
+        }
+
+        #winMessage {
+            color: #0044cc;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 15px;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="gameContainer">
-        <div id="scoreBoard">Score: 0</div>
-        <div id="player"></div>
-        <div class="ground-line"></div>
+    <div id="gameArea">
+        <h1>100 Games Celebration Challenge!</h1>
+        <p>Clicks Remaining:</p>
+        <div id="clickCount">100</div>
+
+        <button id="clickButton" onclick="handleButtonClick()">
+            CLICK ME!
+        </button>
         
-        <div id="winScreen">
-            <h1>🎉 YOU WON! 🎉</h1>
-            <p>Congratulations, YENNER! You reached 100 points, celebrating 100 games on **blueandplay**!</p>
-            <button onclick="redirectToWinPage()">
-                Go to the Celebration Page!
-            </button>
+        <div id="winMessage">
+            🎉 YOU DID IT! 🎉
         </div>
+
+        <a id="winButton" href="https://sites.google.com/providenceschools.org/bluegames/you-won">
+            Go to the Celebration Page!
+        </a>
     </div>
 
     <script>
         // --- GAME CONSTANTS ---
-        const GAME_WIDTH = 600;
-        const PLAYER_SIZE = 20;
-        const JUMP_HEIGHT = 100;
-        const GRAVITY = 5;
-        const OBSTACLE_SPEED = 3;
-        const WIN_SCORE = 100;
-        const REDIRECT_URL = "https://sites.google.com/providenceschools.org/bluegames/you-won";
+        const START_CLICKS = 100;
 
         // --- GAME STATE ---
-        let score = 0;
-        let isJumping = false;
-        let isGameOver = false;
-        let playerBottom = 10;
-        let gameLoopId;
-        let obstacleIntervalId;
+        let clicksRemaining = START_CLICKS;
 
         // --- DOM ELEMENTS ---
-        const player = document.getElementById('player');
-        const scoreBoard = document.getElementById('scoreBoard');
-        const gameContainer = document.getElementById('gameContainer');
-        const winScreen = document.getElementById('winScreen');
-
-        // --- PLAYER CONTROLS ---
-
-        function jump() {
-            if (isGameOver || isJumping) return;
-            isJumping = true;
-            playerBottom = 10; // Reset to ground level before jump
-            
-            // Animation for jump up
-            let jumpUp = setInterval(() => {
-                if (playerBottom >= (10 + JUMP_HEIGHT)) {
-                    clearInterval(jumpUp);
-                    // Start fall
-                    let fallDown = setInterval(() => {
-                        if (playerBottom <= 10) {
-                            clearInterval(fallDown);
-                            isJumping = false;
-                            playerBottom = 10;
-                            player.style.bottom = playerBottom + 'px';
-                        } else {
-                            playerBottom -= GRAVITY;
-                            player.style.bottom = playerBottom + 'px';
-                        }
-                    }, 20);
-                } else {
-                    playerBottom += GRAVITY;
-                    player.style.bottom = playerBottom + 'px';
-                }
-            }, 20);
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' || e.code === 'ArrowUp') {
-                jump();
-            }
-        });
-
-        // --- OBSTACLE GENERATION ---
-
-        function createTriangleObstacle() {
-            const obstacle = document.createElement('div');
-            obstacle.classList.add('triangle');
-            // Randomize position slightly if needed, but for a basic runner, ground level is fine
-            obstacle.style.right = -30 + 'px'; // Start off-screen right
-            gameContainer.appendChild(obstacle);
-            
-            // Start the movement
-            moveObstacle(obstacle);
-        }
-
-        function moveObstacle(obstacle) {
-            let obstacleRight = -30;
-            
-            function animate() {
-                if (isGameOver) return;
-
-                obstacleRight += OBSTACLE_SPEED;
-                obstacle.style.right = obstacleRight + 'px';
-
-                // Check for collision
-                if (checkCollision(obstacle)) {
-                    gameOver();
-                    return;
-                }
-
-                // If obstacle is off screen left, remove it and increment score
-                if (obstacleRight > GAME_WIDTH + 30) {
-                    gameContainer.removeChild(obstacle);
-                    updateScore();
-                    return;
-                }
-
-                // Continue movement
-                requestAnimationFrame(animate);
-            }
-            requestAnimationFrame(animate);
-        }
+        const clickCountDisplay = document.getElementById('clickCount');
+        const clickButton = document.getElementById('clickButton');
+        const winButton = document.getElementById('winButton');
+        const winMessage = document.getElementById('winMessage');
 
         // --- GAME LOGIC ---
 
-        function checkCollision(obstacle) {
-            // Player Bounding Box
-            const playerRect = player.getBoundingClientRect();
-            // Obstacle Bounding Box (Note: Triangles are tricky, this is a simplified box check)
-            const obsRect = obstacle.getBoundingClientRect();
+        function handleButtonClick() {
+            if (clicksRemaining <= 0) {
+                // Ignore clicks if the game is already won
+                return;
+            }
 
-            // A simplified check (checking if the square is inside the triangle's general area)
-            // Player's left edge is less than obstacle's right edge AND
-            // Player's right edge is greater than obstacle's left edge AND
-            // Player's bottom edge is greater than obstacle's top edge (i.e., they are on the ground/air level)
-            return (
-                playerRect.right > obsRect.left &&
-                playerRect.left < obsRect.right &&
-                playerRect.bottom > obsRect.top
-            );
-        }
+            clicksRemaining--;
+            
+            // Update the display
+            clickCountDisplay.textContent = clicksRemaining;
 
-        function updateScore() {
-            if (isGameOver) return;
-
-            score++;
-            scoreBoard.textContent = `Score: ${score}`;
-
-            if (score >= WIN_SCORE) {
+            // Check for the win condition
+            if (clicksRemaining === 0) {
                 gameWin();
             }
         }
 
-        function gameOver() {
-            isGameOver = true;
-            clearInterval(obstacleIntervalId);
-            scoreBoard.textContent = `Score: ${score} - GAME OVER!`;
-            // Optional: Add game restart logic here
-        }
-
         function gameWin() {
-            isGameOver = true;
-            clearInterval(obstacleIntervalId);
+            // 1. Hide the main click button
+            clickButton.style.display = 'none';
             
-            // Stop player movement
-            player.style.transition = 'none';
-
-            // Hide game elements and show win screen
-            gameContainer.querySelectorAll('.triangle').forEach(obs => obs.remove());
-            scoreBoard.style.display = 'none';
-            player.style.display = 'none';
-
-            winScreen.style.display = 'flex';
-        }
-
-        function redirectToWinPage() {
-            // **This is the core redirect command for your winning requirement**
-            window.location.href = REDIRECT_URL;
-        }
-
-        // --- INITIALIZATION ---
-
-        function startGame() {
-            isGameOver = false;
-            score = 0;
-            scoreBoard.textContent = `Score: ${score}`;
-            player.style.bottom = '10px';
+            // 2. Display the win message and the celebratory button
+            winMessage.style.display = 'block';
+            winButton.style.display = 'block';
             
-            // Set up obstacle spawning every 1.5 to 2.5 seconds (randomized)
-            function spawnObstacle() {
-                if (!isGameOver) {
-                    createTriangleObstacle();
-                    // Next spawn time: between 1500ms and 2500ms
-                    const nextSpawnTime = Math.random() * 1000 + 1500; 
-                    obstacleIntervalId = setTimeout(spawnObstacle, nextSpawnTime);
-                }
-            }
+            // 3. Update final text
+            clickCountDisplay.textContent = "0";
             
-            // Start the first spawn
-            obstacleIntervalId = setTimeout(spawnObstacle, 1500);
+            // Optional: You could redirect immediately here, but the user requested a button link.
+            // window.location.href = "https://sites.google.com/providenceschools.org/bluegames/you-won";
         }
+        
+        // Ensure the initial state is correct on load
+        clickCountDisplay.textContent = START_CLICKS;
 
-        // Start the game when the page loads
-        window.onload = startGame;
     </script>
 </body>
 </html>
