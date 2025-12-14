@@ -3,159 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlueandPlay 100 Clicks Challenge</title>
+    <title>Blueandplay 100 Clicks Challenge</title>
     <style>
+        :root {
+            --blue-main: #0b4fd6;
+            --blue-dark: #083aa3;
+            --blue-light: #e8f0ff;
+            --gold: #f4c430;
+            --white: #ffffff;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #e0f7fa; /* Light blue background to match blueandplay theme */
-            font-family: 'Arial', sans-serif;
+            background-color: var(--blue-light);
+            font-family: Arial, sans-serif;
             text-align: center;
         }
 
         #gameArea {
-            padding: 30px;
-            border: 5px solid #0044cc; /* Blue border */
-            border-radius: 15px;
-            background-color: #ffffff;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            width: 80%;
-            max-width: 400px;
+            padding: 32px;
+            border-radius: 18px;
+            background-color: var(--white);
+            box-shadow:
+                0 12px 28px rgba(11, 79, 214, 0.25),
+                0 6px 12px rgba(0, 0, 0, 0.12);
+            width: 85%;
+            max-width: 420px;
         }
 
         h1 {
-            color: #0044cc;
+            color: var(--blue-main);
             font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: var(--blue-dark);
+            font-weight: bold;
             margin-bottom: 5px;
         }
 
         #clickCount {
-            font-size: 3em;
-            color: #cc0000; /* Red for emphasis */
+            font-size: 3.2em;
+            color: var(--gold);
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         #clickButton {
-            padding: 20px 40px;
+            padding: 20px 42px;
             font-size: 1.5em;
-            color: white;
-            background-color: #4CAF50; /* Green button */
+            color: var(--white);
+            background-color: var(--blue-main);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.1s, transform 0.1s;
-            outline: none;
+            transition: background-color 0.15s, transform 0.1s;
         }
 
         #clickButton:hover {
-            background-color: #45a049;
+            background-color: var(--blue-dark);
         }
-        
+
         #clickButton:active {
-            transform: scale(0.98);
-        }
-
-        #winButton {
-            display: none; /* Hidden until 100 clicks */
-            padding: 15px 30px;
-            font-size: 1.2em;
-            color: white;
-            background-color: #0044cc; /* Blue button */
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: background-color 0.3s;
-            text-decoration: none; /* For the link appearance */
-        }
-
-        #winButton:hover {
-            background-color: #003399;
+            transform: scale(0.97);
         }
 
         #winMessage {
-            color: #0044cc;
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-top: 15px;
             display: none;
+            color: var(--blue-main);
+            font-size: 1.9em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        #winButton {
+            display: none;
+            padding: 15px 34px;
+            font-size: 1.2em;
+            color: var(--blue-dark);
+            background-color: var(--gold);
+            border-radius: 10px;
+            margin-top: 26px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        #winButton:hover {
+            background-color: #e6b800;
+            transform: scale(1.03);
+        }
+
+        /* 🎉 CONFETTI STYLES */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 14px;
+            opacity: 0.9;
+            animation: fall linear forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="gameArea">
-        <h1>100 Games Celebration Challenge!</h1>
-        <p>Clicks Remaining:</p>
-        <div id="clickCount">100</div>
+<div id="gameArea">
+    <h1>🎉 Blueandplay 100 🎉</h1>
+    <p>Clicks Remaining</p>
+    <div id="clickCount">100</div>
 
-        <button id="clickButton" onclick="handleButtonClick()">
-            CLICK ME!
-        </button>
-        
-        <div id="winMessage">
-            🎉 YOU DID IT! 🎉
-        </div>
+    <button id="clickButton" onclick="handleButtonClick()">
+        CLICK
+    </button>
 
-        <a id="winButton" href="https://sites.google.com/providenceschools.org/bluegames/you-won">
-            Go to the Celebration Page!
-        </a>
+    <div id="winMessage">
+        YOU UNLOCKED THE 100!
     </div>
 
-    <script>
-        // --- GAME CONSTANTS ---
-        const START_CLICKS = 100;
+    <a id="winButton" href="https://sites.google.com/providenceschools.org/bluegames/you-won">
+        Go to the Celebration Page →
+    </a>
+</div>
 
-        // --- GAME STATE ---
-        let clicksRemaining = START_CLICKS;
+<script>
+    const START_CLICKS = 100;
+    let clicksRemaining = START_CLICKS;
 
-        // --- DOM ELEMENTS ---
-        const clickCountDisplay = document.getElementById('clickCount');
-        const clickButton = document.getElementById('clickButton');
-        const winButton = document.getElementById('winButton');
-        const winMessage = document.getElementById('winMessage');
+    const clickCountDisplay = document.getElementById('clickCount');
+    const clickButton = document.getElementById('clickButton');
+    const winButton = document.getElementById('winButton');
+    const winMessage = document.getElementById('winMessage');
 
-        // --- GAME LOGIC ---
+    function launchConfetti() {
+        const colors = ['#0b4fd6', '#083aa3', '#f4c430', '#ffffff'];
 
-        function handleButtonClick() {
-            if (clicksRemaining <= 0) {
-                // Ignore clicks if the game is already won
-                return;
-            }
+        for (let i = 0; i < 120; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
 
-            clicksRemaining--;
-            
-            // Update the display
-            clickCountDisplay.textContent = clicksRemaining;
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor =
+                colors[Math.floor(Math.random() * colors.length)];
 
-            // Check for the win condition
-            if (clicksRemaining === 0) {
-                gameWin();
-            }
+            confetti.style.animationDuration =
+                Math.random() * 2 + 2 + 's';
+
+            confetti.style.width = Math.random() * 8 + 6 + 'px';
+            confetti.style.height = Math.random() * 14 + 8 + 'px';
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => confetti.remove(), 4000);
         }
+    }
 
-        function gameWin() {
-            // 1. Hide the main click button
+    function handleButtonClick() {
+        if (clicksRemaining <= 0) return;
+
+        clicksRemaining--;
+        clickCountDisplay.textContent = clicksRemaining;
+
+        if (clicksRemaining === 0) {
             clickButton.style.display = 'none';
-            
-            // 2. Display the win message and the celebratory button
             winMessage.style.display = 'block';
-            winButton.style.display = 'block';
-            
-            // 3. Update final text
-            clickCountDisplay.textContent = "0";
-            
-            // Optional: You could redirect immediately here, but the user requested a button link.
-            // window.location.href = "https://sites.google.com/providenceschools.org/bluegames/you-won";
-        }
-        
-        // Ensure the initial state is correct on load
-        clickCountDisplay.textContent = START_CLICKS;
+            winButton.style.display = 'inline-block';
 
-    </script>
+            launchConfetti(); // 🎉 CONFETTI ON WIN
+        }
+    }
+</script>
+
 </body>
 </html>
