@@ -89,8 +89,9 @@
             background-color: var(--gold);
             border-radius: 10px;
             margin-top: 26px;
-            text-decoration: none;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
             transition: transform 0.1s, background-color 0.2s;
         }
 
@@ -99,7 +100,7 @@
             transform: scale(1.03);
         }
 
-        /* 🎉 CONFETTI STYLES */
+        /* 🎉 CONFETTI */
         .confetti {
             position: fixed;
             top: -10px;
@@ -133,9 +134,10 @@
         YOU UNLOCKED THE 100!
     </div>
 
-    <a id="winButton" href="https://sites.google.com/providenceschools.org/bluegames/you-won">
-        Go to the Celebration Page →
-    </a>
+    <!-- COPY REWARD BUTTON -->
+    <button id="winButton" onclick="copyWinLink()">
+        Copy Reward Link
+    </button>
 </div>
 
 <script>
@@ -150,41 +152,4 @@
     function launchConfetti() {
         const colors = ['#0b4fd6', '#083aa3', '#f4c430', '#ffffff'];
 
-        for (let i = 0; i < 120; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.backgroundColor =
-                colors[Math.floor(Math.random() * colors.length)];
-
-            confetti.style.animationDuration =
-                Math.random() * 2 + 2 + 's';
-
-            confetti.style.width = Math.random() * 8 + 6 + 'px';
-            confetti.style.height = Math.random() * 14 + 8 + 'px';
-
-            document.body.appendChild(confetti);
-
-            setTimeout(() => confetti.remove(), 4000);
-        }
-    }
-
-    function handleButtonClick() {
-        if (clicksRemaining <= 0) return;
-
-        clicksRemaining--;
-        clickCountDisplay.textContent = clicksRemaining;
-
-        if (clicksRemaining === 0) {
-            clickButton.style.display = 'none';
-            winMessage.style.display = 'block';
-            winButton.style.display = 'inline-block';
-
-            launchConfetti(); // 🎉 CONFETTI ON WIN
-        }
-    }
-</script>
-
-</body>
-</html>
+        for
