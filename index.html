@@ -94,7 +94,7 @@
 
         #copyText {
             width: 100%;
-            height: 70px;
+            height: 45px;
             border-radius: 8px;
             padding: 8px;
             font-size: 0.9em;
@@ -137,9 +137,8 @@
 
     <!-- GOOGLE SITES SAFE COPY BOX -->
     <div id="copyArea">
-        <p>Copy this into your click card:</p>
+        <p>Copy this</p>
         <textarea id="copyText" readonly>
-Blueandplay 100 Clicks Reward:
 https://sites.google.com/providenceschools.org/bluegames/you-won
         </textarea>
     </div>
@@ -187,7 +186,6 @@ https://sites.google.com/providenceschools.org/bluegames/you-won
             copyArea.style.display = 'block';
             launchConfetti();
 
-            // Auto-select text (works in Google Sites)
             setTimeout(() => {
                 copyText.focus();
                 copyText.select();
